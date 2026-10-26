@@ -16,11 +16,12 @@ body{display:flex;justify-content:center;min-height:100vh;background:radial-grad
 #app{width:100%;max-width:420px;padding:18px 16px 48px}
 .logo{font-size:12px;color:var(--lime);text-shadow:2px 2px 0 var(--pink);text-align:center;margin-bottom:18px;line-height:1.6}
 .card{background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px}
+.card h4{font-size:9px;color:var(--dim);margin-bottom:12px;font-weight:400;line-height:1.5}
 .hidden{display:none!important}
 
 /* buddy */
 .hero{text-align:center;padding:18px 16px}
-.speech{display:inline-block;max-width:300px;background:#fff;color:#1a1030;font-size:14px;font-weight:600;line-height:1.35;padding:10px 14px;border-radius:16px;margin-bottom:14px;position:relative;transition:transform .2s}
+.speech{display:inline-block;max-width:300px;background:#fff;color:#1a1030;font-size:14px;font-weight:600;line-height:1.35;padding:10px 14px;border-radius:16px;margin-bottom:14px;position:relative}
 .speech::after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-top-color:#fff;border-bottom:0}
 .speech.bump{animation:spop .35s}
 @keyframes spop{40%{transform:scale(1.08)}}
@@ -34,73 +35,93 @@ body{display:flex;justify-content:center;min-height:100vh;background:radial-grad
 @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
 .buddy .cheek{position:absolute;top:56%;width:16px;height:9px;background:#ff8cbf;border-radius:50%;opacity:.9}
 .buddy .cheek.l{left:18%}.buddy .cheek.r{right:18%}
-.buddy .mouth{position:absolute;left:50%;top:58%;width:28px;height:14px;margin-left:-14px;border:4px solid #1a1030;border-top:0;border-radius:0 0 20px 20px;transition:all .3s}
+.buddy .mouth{position:absolute;left:50%;top:58%;width:28px;height:14px;margin-left:-14px;border:4px solid #1a1030;border-top:0;border-radius:0 0 20px 20px}
 .buddy.wow .mouth{height:18px;width:20px;margin-left:-10px;border:4px solid #1a1030;border-radius:50%;background:#7a1240}
-.buddy .arm{position:absolute;top:44%;width:30px;height:12px;background:var(--pink);border-radius:8px;transform-origin:0 50%}
-.buddy .arm.l{left:-18px;transform:rotate(200deg);transform-origin:100% 50%;left:-22px;top:46%}
-.buddy .arm.r{right:-22px;top:46%;transform-origin:0 50%;transform:rotate(-20deg)}
+.buddy .arm{position:absolute;top:46%;width:30px;height:12px;background:var(--pink);border-radius:8px}
+.buddy .arm.l{left:-22px;transform:rotate(200deg);transform-origin:100% 50%}
+.buddy .arm.r{right:-22px;transform-origin:0 50%;transform:rotate(-20deg)}
 .buddy.cheer .arm.l{animation:wl .5s 3}.buddy.cheer .arm.r{animation:wr .5s 3}
 @keyframes wl{50%{transform:rotate(130deg)}}@keyframes wr{50%{transform:rotate(-80deg)}}
 .buddy.cheer{animation:hop .5s 2}
 @keyframes hop{40%{transform:scale(var(--s)) translateY(-26px)}}
-.buddy .hat{position:absolute;left:50%;top:-30px;margin-left:-16px;font-size:30px;transition:opacity .4s}
-.buddy.gone{opacity:.0}
+.buddy .hat{position:absolute;left:50%;top:-30px;margin-left:-16px;font-size:30px}
 .left{font-size:26px;color:var(--gold);margin-top:16px;text-shadow:3px 3px 0 #000}
 .leftl{font-size:13px;color:var(--dim);margin-top:8px}
 .bar{height:16px;background:#0b0720;border-radius:8px;margin-top:14px;overflow:hidden;border:2px solid #000}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--lime),#7fe000);transition:width .7s cubic-bezier(.2,1.2,.4,1)}
+.bar.thin{height:10px;margin-top:8px}
 .barl{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:6px}
 .barl b{color:var(--lime)}
 .days{display:inline-block;margin-top:14px;background:var(--gold);color:#000;font-size:9px;padding:8px 10px;border-radius:8px;line-height:1.5}
 
 /* today */
 .today{border-color:var(--lime)}
-.th{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.th{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .th .px{font-size:10px;color:var(--lime)}
 .th span{font-size:12px;color:var(--dim)}
-.goal{font-size:15px;margin:6px 0 14px;line-height:1.4}
-.goal b{color:var(--lime)}
-.task{display:flex;align-items:center;gap:12px;padding:12px;background:var(--panel2);border-radius:14px;margin-bottom:8px;cursor:pointer;transition:all .25s;user-select:none;border:2px solid transparent}
-.task:active{transform:scale(.98)}
-.task .box{width:30px;height:30px;border-radius:9px;border:3px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;transition:all .2s}
-.task .tt{flex:1;font-size:14px;line-height:1.35;min-width:0}
-.task .tt small{display:block;color:var(--dim);font-size:12px;margin-top:2px}
-.task .tt small i{color:var(--lime);font-style:normal}
-.task .am{font-size:10px;color:var(--gold);text-align:right}
-.task.late{border-color:#ff5fa266}
-.task.done{opacity:.55}
-.task.done .box{background:var(--lime);border-color:var(--lime);color:#000}
-.task.done .tt{text-decoration:line-through}
-.status{margin-top:10px;font-size:13px;text-align:center;padding:10px;border-radius:12px;line-height:1.4}
+.big{font-size:15px;line-height:1.4;margin-bottom:12px}
+.big b{color:var(--lime)}
+.to{display:flex;align-items:center;gap:12px;padding:12px;background:var(--panel2);border-radius:14px;margin-bottom:8px}
+.to .e{font-size:28px}
+.to .t{flex:1;font-size:14px;line-height:1.35}
+.to .t small{display:block;color:var(--dim);font-size:12px;margin-top:2px}
+.to .a{font-size:11px;color:var(--gold)}
+.hint{font-size:12px;color:var(--dim);line-height:1.45;background:#0b0720;border-radius:12px;padding:10px 12px;margin:4px 0 12px}
+.hint b{color:var(--gold)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{font-size:13px;padding:8px 10px;border-radius:999px;border:2px solid var(--line);background:none;color:var(--dim);cursor:pointer;font-family:inherit}
+.chip.on{border-color:var(--lime);color:#000;background:var(--lime);font-weight:600}
+.add{display:flex;gap:8px}
+.add input{flex:1;min-width:0;background:#0b0720;border:2px solid var(--line);border-radius:12px;color:var(--txt);font-family:"Press Start 2P",monospace;font-size:11px;padding:12px}
+.add input:focus{outline:none;border-color:var(--lime)}
+.btn{font-family:"Press Start 2P",monospace;border:0;cursor:pointer;border-radius:12px;font-size:9px;padding:12px 14px;color:#000;background:var(--lime);box-shadow:0 4px 0 #5d9400,0 6px 0 #000;white-space:nowrap}
+.btn:active{transform:translateY(4px);box-shadow:0 0 0 #5d9400,0 2px 0 #000}
+.btn.gold{background:var(--gold);box-shadow:0 4px 0 #9a6a00,0 6px 0 #000}
+.status{margin-top:14px;font-size:13px;text-align:center;padding:10px;border-radius:12px;line-height:1.4}
 .status.ok{background:#1f3a0a;color:var(--lime)}
 .status.no{background:#2e1640;color:#ffc2dc}
-.ahead{width:100%;margin-top:10px;background:none;border:2px dashed var(--line);color:var(--dim);border-radius:12px;padding:11px;font-family:inherit;font-size:13px;cursor:pointer}
-.sub{font-size:9px;color:var(--dim);margin:14px 0 8px;font-weight:400}
+.paylist{margin-top:12px}
+.pay{display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 2px;border-top:1px solid var(--line)}
+.pay .w{flex:1;color:var(--dim)}
+.pay .w b{color:var(--txt);font-weight:600}
+.pay .m{font-size:10px;color:var(--lime)}
+.pay button{background:none;border:0;color:var(--dim);font-size:16px;cursor:pointer;padding:2px 6px}
 
-/* milestones */
-.ms h4,.inc h4{font-size:9px;color:var(--dim);margin-bottom:12px;font-weight:400}
-.m{display:flex;align-items:center;gap:12px;padding:8px 0}
-.m .e{font-size:30px;width:38px;text-align:center}
-.m .mt{flex:1;font-size:14px}
-.m .mt small{display:block;color:var(--dim);font-size:12px}
-.m .md{font-size:9px;color:var(--gold)}
-.m.dead .mt{text-decoration:line-through;opacity:.5}
+/* debts */
+.debt{padding:12px 0;border-top:1px solid var(--line)}
+.debt:first-of-type{border-top:0;padding-top:0}
+.debt .r{display:flex;align-items:center;gap:12px}
+.debt .e{font-size:30px;width:38px;text-align:center}
+.debt .n{flex:1;font-size:14px}
+.debt .n small{display:block;color:var(--dim);font-size:12px;margin-top:2px}
+.debt .eta{font-size:8px;color:var(--gold);text-align:right;line-height:1.7}
+.debt .eta b{display:block;font-size:10px;color:var(--txt)}
+.debt.done .n{opacity:.5;text-decoration:line-through}
+.debt.focus{background:linear-gradient(90deg,#b6ff3b14,transparent);border-radius:12px;margin:0 -8px;padding:12px 8px}
+.debt .fix{background:none;border:0;color:var(--sky);font-size:12px;cursor:pointer;margin-top:8px;font-family:inherit;padding:0}
+.order{font-size:7px;color:#000;background:var(--lime);padding:3px 5px;border-radius:5px;vertical-align:middle;margin-left:4px}
 
 /* income */
 .inc .row{display:flex;justify-content:space-between;font-size:13px;color:var(--dim);margin-bottom:8px}
 .inc .row b{color:var(--gold)}
 .inc .bar i{background:linear-gradient(90deg,var(--gold),#ff9d00)}
-.add{display:flex;gap:8px;margin-top:12px}
-.add input{flex:1;min-width:0;background:#0b0720;border:2px solid var(--line);border-radius:12px;color:var(--txt);font-family:"Press Start 2P",monospace;font-size:11px;padding:12px}
-.add input:focus{outline:none;border-color:var(--gold)}
-.btn{font-family:"Press Start 2P",monospace;border:0;cursor:pointer;border-radius:12px;font-size:9px;padding:12px 14px;color:#000;background:var(--gold);box-shadow:0 4px 0 #9a6a00,0 6px 0 #000}
-.btn:active{transform:translateY(4px);box-shadow:0 0 0 #9a6a00,0 2px 0 #000}
+.inc .add{margin-top:12px}
+.inc .add input:focus{border-color:var(--gold)}
+
+/* sheet */
+.sheet{position:fixed;inset:0;background:#0009;z-index:120;display:flex;align-items:flex-end;justify-content:center}
+.sheet .in{width:100%;max-width:420px;background:var(--panel);border:2px solid var(--sky);border-bottom:0;border-radius:22px 22px 0 0;padding:20px 16px 28px;animation:up .25s}
+@keyframes up{from{transform:translateY(100%)}}
+.sheet h5{font-size:10px;color:var(--sky);margin-bottom:10px;line-height:1.5}
+.sheet p{font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:14px}
+.sheet p b{color:var(--gold)}
+.sheet .cancel{display:block;width:100%;margin-top:14px;background:none;border:0;color:var(--dim);font-size:14px;font-family:inherit;cursor:pointer}
 
 /* lock */
 .lock{text-align:center;padding-top:40px}
 .lock p{color:var(--dim);font-size:14px;margin:14px 0 18px}
-.dots{display:flex;gap:12px;justify-content:center;margin-bottom:22px}
-.dots i{width:16px;height:16px;border-radius:50%;border:3px solid var(--line)}
+.dots{display:flex;gap:14px;justify-content:center;margin-bottom:22px}
+.dots i{width:18px;height:18px;border-radius:50%;border:3px solid var(--line)}
 .dots i.on{background:var(--lime);border-color:var(--lime)}
 .dots.err{animation:shake .4s}
 @keyframes shake{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
@@ -112,15 +133,7 @@ body{display:flex;justify-content:center;min-height:100vh;background:radial-grad
 .pop{position:fixed;pointer-events:none;font-family:"Press Start 2P",monospace;font-size:16px;color:var(--lime);text-shadow:3px 3px 0 #000;z-index:99;animation:pop 1s ease-out forwards;transform:translateX(-50%)}
 @keyframes pop{0%{opacity:0;margin-top:0}20%{opacity:1}100%{opacity:0;margin-top:-90px}}
 canvas{position:fixed;inset:0;pointer-events:none;z-index:98}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2e1640;color:#ffc2dc;padding:10px 14px;border-radius:12px;font-size:13px;z-index:100}
-.sheet{position:fixed;inset:0;background:#0009;z-index:120;display:flex;align-items:flex-end;justify-content:center}
-.sheet .in{width:100%;max-width:420px;background:var(--panel);border:2px solid var(--lime);border-bottom:0;border-radius:22px 22px 0 0;padding:20px 16px 28px;animation:up .25s}
-@keyframes up{from{transform:translateY(100%)}}
-.sheet h5{font-size:10px;color:var(--lime);margin-bottom:10px;line-height:1.5}
-.sheet p{font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:14px}
-.sheet p b{color:var(--gold)}
-.sheet .add{margin-top:0}
-.sheet .cancel{display:block;width:100%;margin-top:14px;background:none;border:0;color:var(--dim);font-size:14px;font-family:inherit;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2e1640;color:#ffc2dc;padding:10px 14px;border-radius:12px;font-size:13px;z-index:130}
 .foot{text-align:center;color:var(--dim);font-size:11px;margin-top:4px}
 </style>
 </head>
@@ -129,7 +142,6 @@ canvas{position:fixed;inset:0;pointer-events:none;z-index:98}
 <div id="app">
   <div class="logo px">DEBTKILLER</div>
 
-  <!-- PIN lock -->
   <section id="lock" class="lock hidden">
     <div class="stage"><div class="buddy" style="--s:.8"><div class="body"></div><div class="eye l"></div><div class="eye r"></div><div class="cheek l"></div><div class="cheek r"></div><div class="mouth"></div><div class="arm l"></div><div class="arm r"></div></div></div>
     <p>Hey you 👋 Type your PIN</p>
@@ -138,7 +150,6 @@ canvas{position:fixed;inset:0;pointer-events:none;z-index:98}
     <div class="lockmsg" id="lockmsg"></div>
   </section>
 
-  <!-- main -->
   <section id="main" class="hidden">
     <div class="card hero">
       <div class="speech" id="say"></div>
@@ -152,23 +163,25 @@ canvas{position:fixed;inset:0;pointer-events:none;z-index:98}
 
     <div class="card today">
       <div class="th"><div class="px" id="tday"></div><span id="tdate"></span></div>
-      <div class="goal" id="goal"></div>
-      <div id="tasks"></div>
+      <div class="big" id="big"></div>
+      <div id="toList"></div>
+      <div class="hint hidden" id="tzHint"></div>
+      <div class="chips" id="chips"></div>
+      <div class="add"><input id="amt" inputmode="numeric" placeholder="amount you paid"><button class="btn" id="payBtn">PAID ✓</button></div>
       <div class="status" id="status"></div>
-      <div id="aheadList"></div>
-      <button class="ahead" id="aheadBtn">Got extra money? Show the next ones →</button>
+      <div class="paylist" id="paylist"></div>
     </div>
 
-    <div class="card ms">
-      <h4 class="px">THE 3 BIG ONES</h4>
-      <div id="ms"></div>
+    <div class="card">
+      <h4 class="px">YOUR DEBTS · IN ORDER</h4>
+      <div id="debts"></div>
     </div>
 
     <div class="card inc">
       <h4 class="px">EXTRA MONEY EARNED 💰</h4>
-      <div class="row"><span>Goal: about <b>28M</b> on top of salary</span><b id="incTxt">0</b></div>
+      <div class="row"><span>Goal: about <b id="incGoal">28M</b> on top of salary</span><b id="incTxt">0</b></div>
       <div class="bar"><i id="incBar"></i></div>
-      <div class="add"><input id="incAmt" inputmode="numeric" placeholder="e.g. 1500000"><button class="btn" id="incBtn">+ ADD</button></div>
+      <div class="add"><input id="incAmt" inputmode="numeric" placeholder="e.g. 1500000"><button class="btn gold" id="incBtn">+ ADD</button></div>
     </div>
     <div class="foot">Progress saves automatically ✓</div>
   </section>
@@ -177,20 +190,20 @@ canvas{position:fixed;inset:0;pointer-events:none;z-index:98}
 <div class="sheet hidden" id="sheet"><div class="in">
   <h5 class="px" id="shName"></h5>
   <p id="shInfo"></p>
-  <div class="add"><input id="shAmt" inputmode="numeric"><button class="btn" id="shOk" style="background:var(--lime);box-shadow:0 4px 0 #5d9400,0 6px 0 #000">PAID ✓</button></div>
-  <button class="cancel" id="shCancel">Not yet</button>
+  <div class="add"><input id="shAmt" inputmode="numeric"><button class="btn" id="shOk" style="background:var(--sky);box-shadow:0 4px 0 #1f7fa0,0 6px 0 #000">SAVE</button></div>
+  <button class="cancel" id="shCancel">Cancel</button>
 </div></div>
+
 <script>
 const $ = s => document.querySelector(s);
 const fmt = n => { n = Math.max(0, Math.round(n)); return n >= 1e6 ? (n/1e6).toFixed(n >= 1e7 ? 1 : 2).replace(/\.?0+$/, '') + 'M' : n >= 1e3 ? Math.round(n/1e3) + 'k' : '' + n; };
-let D, S, E = {}, showAhead = false;
+const full = n => Math.round(n).toLocaleString('en-US').replace(/,/g, ' ');
+const num = v => parseInt(String(v || '').replace(/\D/g, '')) || 0;
+let D, S, picked = null;
 
 // ---------- PIN ----------
 let pin = '';
-function buildPad(){
-  $('#pad').innerHTML = [1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k => k === '' ? '<span></span>' : `<button data-k="${k}">${k}</button>`).join('');
-  drawDots();
-}
+function buildPad(){ $('#pad').innerHTML = [1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k => k === '' ? '<span></span>' : `<button data-k="${k}">${k}</button>`).join(''); drawDots(); }
 function drawDots(){ $('#dots').innerHTML = Array.from({length:4},(_,i)=>`<i class="${i<pin.length?'on':''}"></i>`).join(''); }
 $('#pad').addEventListener('click', async ev => {
   const b = ev.target.closest('button'); if (!b) return;
@@ -199,170 +212,177 @@ $('#pad').addEventListener('click', async ev => {
   drawDots();
   if (pin.length === 4) {
     const r = await fetch('/api/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({pin})});
-    if (r.ok) { pin=''; load(); }
+    if (r.ok) { pin = ''; load(); }
     else { const j = await r.json().catch(()=>({})); $('#lockmsg').textContent = j.error || 'Nope'; $('#dots').classList.add('err'); setTimeout(()=>$('#dots').classList.remove('err'),400); pin=''; drawDots(); }
   }
 });
 
-// ---------- data ----------
 async function load(){
   const r = await fetch('/api/state');
   if (r.status === 401) { $('#lock').classList.remove('hidden'); $('#main').classList.add('hidden'); buildPad(); return; }
-  if (!r.ok) { toast('Server problem. Try again in a minute.'); return; }
-  const j = await r.json();
-  D = j.debt; S = j.state; E = Object.fromEntries(D.enemies.map(e => [e.id, e]));
+  if (!r.ok) return toast('Server problem. Try again in a minute.');
+  const j = await r.json(); D = j.debt; S = j.state;
   $('#lock').classList.add('hidden'); $('#main').classList.remove('hidden');
   render();
 }
-
-// Day index in Tashkent time: Nov 5 = day 0
-function dayIndex(){
-  const now = new Date(Date.now() + 5*3600e3); // UTC+5
-  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-  return Math.round((today - Date.UTC(2026,10,5)) / 864e5);
+async function api(path, body){
+  const r = await fetch(path, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+  if (r.status === 401) { load(); throw 0; }
+  if (!r.ok) { toast('Could not save — check your internet'); throw 0; }
+  S = (await r.json()).state;
 }
-const dlabel = iso => new Date(iso + 'T00:00:00Z').toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short', timeZone:'UTC'});
-// done[id] is either an ISO string (old format → estimate) or {at, amount}
-const paidFor = id => { const v = S.done[id]; return v && typeof v === 'object' && v.amount ? v.amount : (E[id] ? E[id].pay : 0); };
-const paidTotal = () => Object.keys(S.done).reduce((a,id) => a + (E[id] ? paidFor(id) : 0), 0);
-const isDone = id => !!S.done[id];
-const name = id => E[id].label || id;
 
+// ---------- math ----------
+const DAYS = 50;
+const T0 = Date.UTC(2026,10,5);
+const tashkentDay = iso => { const t = new Date(new Date(iso).getTime() + 5*3600e3); return Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate()); };
+const dayIndex = () => Math.round((tashkentDay(new Date().toISOString()) - T0) / 864e5);
+const dateOf = i => new Date(T0 + i*864e5);
+const dlabel = (i, wd=true) => dateOf(i).toLocaleDateString('en-GB', {...(wd?{weekday:'short'}:{}), day:'numeric', month:'short', timeZone:'UTC'});
+const debtById = id => D.debts.find(d => d.id === id);
+function leftOf(d){
+  const ov = S.balances[d.id];
+  const paid = S.payments.filter(p => p.debt === d.id && (!ov || p.at > ov.at)).reduce((a,p) => a + p.amount, 0);
+  return Math.max(0, (ov ? ov.left : d.start) - paid);
+}
+const totalStart = () => D.debts.reduce((a,d) => a + d.start, 0);
+const totalLeft = () => D.debts.reduce((a,d) => a + leftOf(d), 0);
+const target = i => totalStart() * Math.min(DAYS, i + 1) / DAYS;
+function etaIndex(id){ // day when the plan reaches the end of this debt
+  let cum = 0; for (const d of D.debts) { cum += d.start; if (d.id === id) break; }
+  return Math.min(DAYS-1, Math.ceil(cum / totalStart() * DAYS) - 1);
+}
+function allocate(amount){ // split an amount over debts in order
+  const out = []; let rest = amount;
+  for (const d of D.debts) { if (rest <= 0) break; const l = leftOf(d); if (!l) continue; const take = Math.min(l, rest); out.push({d, amount: take}); rest -= take; }
+  return out;
+}
+
+// ---------- talk ----------
 const LINES = [
-  [0,    ["Hi! I'm your debt 👋 You WILL pay me off. I believe in u!", "We got 50 days. You can do this 💪"]],
-  [.05,  ["Ooh first hits! Keep going 🔥", "Nice one! That's how it starts ✨"]],
-  [.2,   ["Look at you go!! 🚀", "I'm shrinking and I love it 😄"]],
-  [.4,   ["Almost halfway. So proud of u 🥹", "You're on fire today 🔥🔥"]],
-  [.5,   ["HALFWAY!!! 🎉 Unstoppable.", "Half of me is gone. You're a legend 🏆"]],
-  [.7,   ["I'm getting tiny… keep pushing! 💨", "Only a little left. Don't stop now 😤"]],
-  [.9,   ["Almost free… I can see the finish line 🏁", "Last bit! You got this!!"]],
-  [1,    ["I'M GONE! You're DEBT FREE AF 🎉🎄", "Freedom unlocked. Merry Christmas 🎄✨"]],
+  [0,   ["Hi! I'm your debt 👋 You WILL pay me off. I believe in u!", "We got 50 days. You can do this 💪"]],
+  [.05, ["Ooh first hits! Keep going 🔥", "Nice one! That's how it starts ✨"]],
+  [.16, ["The snail is getting nervous 🐌😅", "Look at you go!! 🚀"]],
+  [.3,  ["I'm shrinking and I love it 😄", "You're on fire 🔥🔥"]],
+  [.5,  ["HALFWAY!!! 🎉 Unstoppable.", "Half of me is gone. Legend 🏆"]],
+  [.7,  ["I'm getting tiny… keep pushing! 💨", "Only a little left. Don't stop now 😤"]],
+  [.9,  ["Almost free… I can see the finish line 🏁", "Last bit! You got this!!"]],
+  [1,   ["I'M GONE! You're DEBT FREE AF 🎉🎄", "Freedom unlocked. Merry Christmas 🎄✨"]],
 ];
 const CHEERS = ['BOOM 💥','Yesss!','That\'s my guy 😎','Easy money!','Another one 🔥','Legend.','Smashed it!','Let\'s gooo 🚀'];
 const pick = a => a[Math.floor(Math.random()*a.length)];
-function sayFor(p){ return pick(LINES.filter(x => p >= x[0]).pop()[1]); }
+const sayFor = p => pick(LINES.filter(x => p >= x[0]).pop()[1]);
 
-function tasksFor(d){
-  const di = Math.max(0, Math.min(d, D.plan.length-1));
-  const ids = [];
-  for (let i = 0; i <= di; i++) for (const id of D.plan[i].kills) {
-    if (!isDone(id) || i === di) ids.push({id, late: i < di && !isDone(id)});
-  }
-  return ids;
-}
-function upcoming(d, n){
-  const out = [];
-  for (let i = Math.max(0,d+1); i < D.plan.length && out.length < n; i++) for (const id of D.plan[i].kills) if (!isDone(id) && out.length < n) out.push({id, date: D.plan[i].date});
-  return out;
-}
-function taskHTML(id, extra=''){
-  const e = E[id], done = isDone(id);
-  const amt = done ? paidFor(id) : e.pay;
-  const sub = done ? `paid ${fmt(amt)}${e.bal && e.bal > amt ? ` · <i>saved ${fmt(e.bal - amt)}</i>` : ''}`
-    : e.rate ? `owes ${fmt(e.bal)} · ${e.rate}% loan` : `owes ${fmt(e.bal)} · early payoff ≈ ${fmt(e.pay)}`;
-  const taken = e.start ? `<small>📅 taken ${dlabel(e.start).replace(/^\w+ /,'')} ${e.start.slice(0,4)}</small>` : '';
-  return `<div class="task ${done?'done':''} ${extra}" data-id="${id}"><div class="box">${done?'✓':''}</div><div class="tt">${name(id)}${taken}<small>${sub}</small></div><div class="am px">${done?'':'≈'}${fmt(amt)}</div></div>`;
-}
-
+// ---------- render ----------
 function render(say){
-  const paid = paidTotal(), left = D.total - paid, p = Math.min(1, paid / D.total);
+  const tot = totalStart(), left = totalLeft(), paid = tot - left, p = Math.min(1, paid / tot);
   $('#left').textContent = fmt(left) + ' so‘m';
   $('#paid').textContent = fmt(paid); $('#pct').textContent = Math.round(p*100) + '%';
   $('#bar').style.width = (p*100) + '%';
   const b = $('#buddy'); b.style.setProperty('--s', Math.max(.35, 1 - p*.65));
   $('#hat').textContent = p >= 1 ? '🎉' : p >= .5 ? '👑' : p >= .2 ? '🧢' : '';
   b.classList.toggle('wow', p >= .5);
-  const sp = $('#say'); sp.textContent = say || sayFor(p); sp.classList.remove("bump"); void sp.offsetWidth; sp.classList.add("bump");
+  const sp = $('#say'); sp.textContent = say || sayFor(p); sp.classList.remove('bump'); void sp.offsetWidth; sp.classList.add('bump');
 
-  const d = dayIndex();
-  const dl = Math.max(0, 49 - Math.max(d, 0));
+  const d = dayIndex(), di = Math.max(0, Math.min(d, DAYS-1));
+  const dl = DAYS - 1 - Math.max(d, 0);
   $('#days').textContent = p >= 1 ? '🎄 DEBT FREE' : d < 0 ? `STARTS IN ${-d} DAY${d===-1?'':'S'} · NOV 5` : dl > 0 ? `${dl} DAYS TO DEC 24` : '🎄 DEC 24';
+  $('#tday').textContent = d < 0 ? 'WARM-UP' : d >= DAYS ? 'OVERTIME' : `DAY ${d+1} OF ${DAYS}`;
+  $('#tdate').textContent = d < 0 ? 'Day 1 = ' + dlabel(0) : dlabel(di);
 
-  const di = Math.max(0, Math.min(d, 49));
-  $('#tday').textContent = d < 0 ? 'WARM-UP' : d > 49 ? 'OVERTIME' : `DAY ${d+1} OF 50`;
-  $('#tdate').textContent = d < 0 ? 'Day 1 = ' + dlabel(D.plan[0].date) : dlabel(D.plan[di].date);
-  const list = tasksFor(d);
-  const todo = list.filter(t => !isDone(t.id));
-  const todoAmt = todo.reduce((a,t) => a + E[t.id].pay, 0);
-  $('#goal').innerHTML = d < 0 ? `Plan starts Nov 5 — but you can already start with day 1 👇`
-    : todo.length ? `Pay off <b>${todo.length} debt${todo.length>1?'s':''}</b> today · <b>${fmt(todoAmt)}</b>`
-    : list.length ? `Today's list is done ✅ You're a machine.` : `Nothing new today — earn & stack money for the next one 💪`;
-  $('#tasks').innerHTML = list.map(t => taskHTML(t.id, t.late ? 'late' : '')).join('') +
-    (list.some(t=>t.late) ? '' : '');
+  // how much is needed today to be on pace
+  const need = Math.max(0, Math.round((d < 0 ? target(0) : target(di)) - paid));
+  const plan = allocate(need);
+  const todayPaid = S.payments.filter(x => tashkentDay(x.at) === tashkentDay(new Date().toISOString()));
+  const todaySum = todayPaid.reduce((a,x) => a + x.amount, 0);
+  if (p >= 1) $('#big').innerHTML = `Everything is paid. Go celebrate 🎉`;
+  else if (need > 0) $('#big').innerHTML = d < 0 ? `Warm-up! Day 1 asks for about <b>${fmt(need)}</b> — start early if you can 👇` : `Pay about <b>${fmt(need)}</b> today 👇`;
+  else $('#big').innerHTML = todaySum ? `Today's done ✅ Anything extra puts you ahead.` : `You're ahead of plan 🚀 Rest or push further.`;
 
-  const target = d < 0 ? 0 : D.plan[di].target, diff = paid - target, st = $('#status');
-  if (p >= 1) { st.className = 'status ok'; st.textContent = '🎉 Everything is paid off. Go celebrate.'; }
-  else if (d < 0) { st.className = 'status ok'; st.textContent = `Every payment before Nov 5 puts you ahead 🚀`; }
-  else { st.className = 'status ' + (diff >= 0 ? 'ok' : 'no');
-    st.textContent = diff >= 0 ? `✅ On track for Dec 24${diff > 0 ? ' · ' + fmt(diff) + ' ahead' : ''}` : `${fmt(-diff)} more and you're back on track. You got this 💪`; }
+  $('#toList').innerHTML = plan.map(x => `<div class="to"><div class="e">${x.d.emoji}</div><div class="t">${x.d.name}<small>${x.d.kind === 'any' ? 'any amount works' : 'close whole plans'}</small></div><div class="a px">≈${fmt(x.amount)}</div></div>`).join('');
 
-  const up = upcoming(d < 0 ? 0 : di, 5);
-  $('#aheadList').innerHTML = showAhead && up.length ? `<div class="sub px">NEXT UP</div>` + up.map(u => taskHTML(u.id)).join('') : '';
-  $('#aheadBtn').textContent = showAhead ? 'Hide next ones' : 'Got extra money? Show the next ones →';
-  $('#aheadBtn').classList.toggle('hidden', !up.length);
+  const tzPlan = plan.find(x => x.d.id === 'TZ');
+  const h = $('#tzHint');
+  if (tzPlan) { h.classList.remove('hidden'); h.innerHTML = `🍩 Tezcoin can't take part-payments. Pick whole plans in the app that add up to <b>about ${fmt(tzPlan.amount)}</b> — like 100k + 300k + 138k — and log the total.`; }
+  else h.classList.add('hidden');
 
-  const tz = D.enemies.filter(e => e.type === 'minion'), tzLeft = tz.filter(e => !isDone(e.id));
-  const cp = id => { const i = D.plan.findIndex(x => x.kills.includes(id)); return i < 0 ? '' : dlabel(D.plan[i].date).replace(/^\w+ /,'').toUpperCase(); };
-  const lastTz = tz[tz.length-1].id;
-  const M = [
-    {e:'🍩', t:'All Tezcoin + BNPL', s:`${tzLeft.length} of ${tz.length} left · ${fmt(tzLeft.reduce((a,e)=>a+e.pay,0))}`, d:cp(lastTz), dead:!tzLeft.length},
-    {e:'🐌', t:'TBC old loan', s:'49% interest · ' + fmt(E['TBC-OLD'].pay), d:cp('TBC-OLD'), dead:isDone('TBC-OLD')},
-    {e:'🦕', t:'TBC new loan', s:'49% interest · ' + fmt(E['TBC-NEW'].pay), d:cp('TBC-NEW'), dead:isDone('TBC-NEW')},
-  ];
-  $('#ms').innerHTML = M.map(x => `<div class="m ${x.dead?'dead':''}"><div class="e">${x.dead?'✅':x.e}</div><div class="mt">${x.t}<small>${x.s}</small></div><div class="md px">${x.dead?'DONE':x.d}</div></div>`).join('');
+  // chips: default to the first debt still open
+  const open = D.debts.filter(x => leftOf(x) > 0);
+  if (!picked || !leftOf(debtById(picked))) picked = (open[0] || D.debts[0]).id;
+  $('#chips').innerHTML = D.debts.map(x => `<button class="chip ${x.id===picked?'on':''}" data-chip="${x.id}">${x.emoji} ${x.name.replace('TBC Bank · ','TBC ')}</button>`).join('');
+  const sug = plan.find(x => x.d.id === picked);
+  $('#amt').placeholder = sug ? 'about ' + full(sug.amount) : 'amount you paid';
 
-  const inc = S.income || 0;
-  $('#incTxt').textContent = fmt(inc);
-  $('#incBar').style.width = Math.min(100, inc / 28e6 * 100) + '%';
+  const st = $('#status');
+  if (p >= 1) { st.className = 'status ok'; st.textContent = '🎉 Debt free. Unreal.'; }
+  else if (d < 0) { st.className = 'status ok'; st.textContent = 'Every so‘m before Nov 5 puts you ahead 🚀'; }
+  else { const diff = paid - target(di); st.className = 'status ' + (diff >= 0 ? 'ok' : 'no');
+    st.textContent = diff >= 0 ? `✅ On track for Dec 24${diff >= 1000 ? ' · ' + fmt(diff) + ' ahead' : ''}` : `${fmt(-diff)} more and you're back on track. You got this 💪`; }
+
+  $('#paylist').innerHTML = todayPaid.length ? todayPaid.slice().reverse().map(x => { const dd = debtById(x.debt);
+    return `<div class="pay"><span>${dd ? dd.emoji : '💸'}</span><span class="w"><b>${dd ? dd.name : x.debt}</b> · ${new Date(x.at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Tashkent'})}</span><span class="m px">-${fmt(x.amount)}</span><button data-undo="${x.id}" title="undo">×</button></div>`; }).join('') : '';
+
+  // debts list
+  const focusId = open[0] && open[0].id;
+  $('#debts').innerHTML = D.debts.map((x, i) => {
+    const l = leftOf(x), done = l <= 0, pct = Math.min(100, (1 - l / Math.max(x.start, 1)) * 100);
+    const eta = etaIndex(x.id);
+    const plans = x.plans ? ` · ${x.plans} plans` : '';
+    return `<div class="debt ${done?'done':''} ${x.id===focusId?'focus':''}"><div class="r"><div class="e">${done?'✅':x.emoji}</div>
+      <div class="n">${i+1}. ${x.name}${x.id===focusId?'<span class="order px">NOW</span>':''}<small>${done ? 'paid off 🎉' : `${fmt(l)} left${plans}`}</small></div>
+      <div class="eta px">${done ? 'DONE' : 'GONE BY<b>' + dlabel(eta,false).toUpperCase() + '</b>'}</div></div>
+      <div class="bar thin"><i style="width:${pct}%"></i></div>
+      ${done ? '' : `<button class="fix" data-fix="${x.id}">✎ Fix the real balance from the app</button>`}</div>`;
+  }).join('');
+
+  const goal = D.incomeGoal || 28e6;
+  $('#incGoal').textContent = fmt(goal);
+  $('#incTxt').textContent = fmt(S.income);
+  $('#incBar').style.width = Math.min(100, S.income / goal * 100) + '%';
 }
 
-let sheetId = null, sheetEl = null;
-document.addEventListener('click', ev => {
-  const t = ev.target.closest('.task'); if (!t || !D || ev.target.closest('#sheet')) return;
-  const id = t.dataset.id;
-  if (isDone(id)) return commit(id, null, t); // tap again = undo
-  const e = E[id]; sheetId = id; sheetEl = t;
-  $('#shName').textContent = name(id);
-  $('#shInfo').innerHTML = e.rate
-    ? `Still owed: <b>${fmt(e.bal)}</b> (${e.rate}% loan).<br>Check the exact payoff amount in the TBC app.`
-    : `${e.start ? `Taken on <b>${dlabel(e.start)} ${e.start.slice(0,4)}</b>.<br>` : ''}Still owed on schedule: <b>${fmt(e.bal)}</b>.<br>My early-payoff guess: <b>≈ ${fmt(e.pay)}</b>.<br>Type what the Tezcoin app actually charged you.`;
-  $('#shAmt').value = e.pay; $('#sheet').classList.remove('hidden'); setTimeout(() => $('#shAmt').select(), 50);
+// ---------- actions ----------
+document.addEventListener('click', async ev => {
+  const c = ev.target.closest('[data-chip]');
+  if (c) { picked = c.dataset.chip; render($('#say').textContent); $('#amt').focus(); return; }
+  const u = ev.target.closest('[data-undo]');
+  if (u) { try { await api('/api/undo', {id: u.dataset.undo}); render('Undo, no problem 👍'); } catch {} return; }
+  const f = ev.target.closest('[data-fix]');
+  if (f) { const d = debtById(f.dataset.fix); $('#sheet').dataset.debt = d.id;
+    $('#shName').textContent = d.emoji + ' ' + d.name;
+    $('#shInfo').innerHTML = `Open the ${d.id === 'TZ' ? 'Tezcoin' : 'TBC'} app and type how much it says you still owe${d.id === 'TZ' ? ' (the early-payoff total for all plans)' : ''}.<br>Right now I think it's <b>${full(leftOf(d))}</b>.`;
+    $('#shAmt').value = leftOf(d); $('#sheet').classList.remove('hidden'); setTimeout(() => $('#shAmt').select(), 50); }
 });
+$('#payBtn').onclick = async () => {
+  const a = num($('#amt').value); if (!a) return $('#amt').focus();
+  const d = debtById(picked), wasLeft = leftOf(d);
+  try { await api('/api/pay', {debt: picked, amount: a}); } catch { return; }
+  $('#amt').value = '';
+  const killed = wasLeft > 0 && leftOf(d) <= 0;
+  celebrate(a, $('#payBtn'), killed);
+  render(killed ? `${d.emoji} ${d.name.toUpperCase()} IS GONE!! Huge!!` : pick(CHEERS));
+};
+$('#amt').addEventListener('keydown', e => { if (e.key === 'Enter') $('#payBtn').click(); });
 $('#shCancel').onclick = () => $('#sheet').classList.add('hidden');
 $('#sheet').onclick = ev => { if (ev.target.id === 'sheet') $('#sheet').classList.add('hidden'); };
-$('#shOk').onclick = () => {
-  const a = parseInt(($('#shAmt').value || '').replace(/\D/g,'')) || 0; if (!a) return $('#shAmt').focus();
-  $('#sheet').classList.add('hidden'); commit(sheetId, a, sheetEl);
+$('#shOk').onclick = async () => {
+  const v = String($('#shAmt').value).trim(); if (v === '') return $('#shAmt').focus();
+  try { await api('/api/balance', {debt: $('#sheet').dataset.debt, left: num(v)}); } catch { return; }
+  $('#sheet').classList.add('hidden'); render('Updated 👌 Real numbers only.');
 };
-async function commit(id, amount, t){
-  const wasDone = isDone(id);
-  // optimistic update
-  if (wasDone) delete S.done[id]; else S.done[id] = {at: new Date().toISOString(), amount};
-  if (!wasDone) celebrate(id, t, amount);
-  render(wasDone ? 'Undo, no problem 👍' : (E[id].type === 'boss' ? (id === 'TBC-NEW' ? null : 'THE SNAIL IS DEAD 🐌💀 Huge!') : pick(CHEERS)));
-  try {
-    const r = await fetch('/api/toggle', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id, amount})});
-    if (r.status === 401) return load();
-    if (!r.ok) throw 0;
-    S = (await r.json()).state; render($('#say').textContent);
-  } catch { toast('Could not save — check your internet'); load(); }
-}
-$('#aheadBtn').onclick = () => { showAhead = !showAhead; render($('#say').textContent); };
 $('#incBtn').onclick = async () => {
-  const a = parseInt(($('#incAmt').value || '').replace(/\D/g,'')) || 0; if (!a) return $('#incAmt').focus();
-  const r = await fetch('/api/income', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({amount:a})});
-  if (!r.ok) return toast('Could not save');
-  S = (await r.json()).state; $('#incAmt').value = ''; beep('coin'); confetti(40);
-  render(`+${fmt(a)} 💰 Hustle mode ON`);
+  const a = num($('#incAmt').value); if (!a) return $('#incAmt').focus();
+  try { await api('/api/income', {amount: a}); } catch { return; }
+  $('#incAmt').value = ''; beep('coin'); confetti(40); render(`+${fmt(a)} 💰 Hustle mode ON`);
 };
 
-function celebrate(id, el, amount){
-  const r = el.getBoundingClientRect(), e = E[id];
-  const pp = document.createElement('div'); pp.className = 'pop'; pp.textContent = '-' + fmt(amount || e.pay);
+// ---------- fx ----------
+function celebrate(amount, el, big){
+  const r = el.getBoundingClientRect();
+  const pp = document.createElement('div'); pp.className = 'pop'; pp.textContent = '-' + fmt(amount);
   pp.style.left = (r.left + r.width/2) + 'px'; pp.style.top = r.top + 'px'; document.body.appendChild(pp); setTimeout(() => pp.remove(), 1000);
   const b = $('#buddy'); b.classList.remove('cheer'); void b.offsetWidth; b.classList.add('cheer');
-  const big = e.type === 'boss';
-  confetti(big ? 300 : 45); beep(big ? 'big' : 'kill');
+  confetti(big ? 300 : 50); beep(big ? 'big' : 'kill');
   if (navigator.vibrate) navigator.vibrate(big ? [60,40,60,40,120] : 30);
 }
 function toast(t){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }

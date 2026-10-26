@@ -17,16 +17,32 @@ function loadDebtData() {
   if (process.env.DEBT_DATA) {
     return JSON.parse(zlib.gunzipSync(Buffer.from(process.env.DEBT_DATA, 'base64')).toString('utf8'));
   }
-  const local = path.join(__dirname, 'data.local.json'); // for local dev only (gitignored)
+  const local = path.join(__dirname, 'data.local.json'); // local dev only (gitignored)
   if (fs.existsSync(local)) return JSON.parse(fs.readFileSync(local, 'utf8'));
   return null;
 }
 const DEBT = loadDebtData();
+const DEBT_IDS = new Set(DEBT ? DEBT.debts.map(d => d.id) : []);
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 function readState() {
-  try { return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); }
-  catch { return { done: {}, log: [] }; }
+  let s;
+  try { s = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); } catch { s = {}; }
+  s.payments = s.payments || [];
+  s.balances = s.balances || {};
+  s.income = s.income || 0;
+  s.incomeLog = s.incomeLog || [];
+  // v1 → v2: per-contract ticks become Tezcoin payments
+  if (s.done && !s.migrated) {
+    for (const [id, v] of Object.entries(s.done)) {
+      if (!id.startsWith('TZ-') && id !== 'BNPL' && !id.startsWith('TBC-')) continue;
+      const amount = v && typeof v === 'object' && v.amount ? v.amount : 0;
+      const at = v && typeof v === 'object' ? v.at : v;
+      if (amount) s.payments.push({ id: crypto.randomUUID(), debt: id.startsWith('TZ-') ? 'TZ' : id, amount, at });
+    }
+    s.migrated = true;
+  }
+  return s;
 }
 function writeState(s) {
   const tmp = STATE_FILE + '.tmp';
@@ -42,7 +58,7 @@ function authed(req) {
     crypto.timingSafeEqual(Buffer.from(m[1]), Buffer.from(token()));
 }
 
-const tries = new Map(); // simple brute-force guard per IP
+const tries = new Map(); // brute-force guard per IP
 function limited(ip) {
   const now = Date.now(), t = (tries.get(ip) || []).filter(x => now - x < 15 * 60e3);
   tries.set(ip, t);
@@ -59,6 +75,7 @@ function readBody(req) {
     req.on('end', () => { try { ok(b ? JSON.parse(b) : {}); } catch (e) { bad(e); } });
   });
 }
+const money = v => { const a = Math.round(Number(v)); return Number.isFinite(a) && a > 0 && a < 1e10 ? a : null; };
 
 const INDEX = fs.readFileSync(path.join(__dirname, 'public', 'index.html'));
 
@@ -79,42 +96,40 @@ http.createServer(async (req, res) => {
       });
     }
 
-    if (url.pathname.startsWith('/api/')) {
-      if (!authed(req)) return send(res, 401, { error: 'locked' });
-      if (!DEBT) return send(res, 500, { error: 'DEBT_DATA is not configured' });
+    if (!url.pathname.startsWith('/api/')) return send(res, 404, { error: 'not found' });
+    if (!authed(req)) return send(res, 401, { error: 'locked' });
+    if (!DEBT) return send(res, 500, { error: 'DEBT_DATA is not configured' });
 
-      if (req.method === 'GET' && url.pathname === '/api/state')
-        return send(res, 200, { debt: DEBT, state: readState(), now: new Date().toISOString() });
+    if (req.method === 'GET' && url.pathname === '/api/state')
+      return send(res, 200, { debt: DEBT, state: readState() });
 
-      if (req.method === 'POST' && url.pathname === '/api/toggle') {
-        const { id, amount } = await readBody(req);
-        if (!DEBT.enemies.some(e => e.id === id)) return send(res, 400, { error: 'unknown id' });
-        const s = readState();
-        if (s.done[id]) { delete s.done[id]; s.log.push({ id, undo: true, at: new Date().toISOString() }); }
-        else {
-          const a = Math.round(Number(amount));
-          const at = new Date().toISOString();
-          s.done[id] = Number.isFinite(a) && a > 0 && a < 1e9 ? { at, amount: a } : { at };
-          s.log.push({ id, at, amount: s.done[id].amount });
-        }
-        s.log = s.log.slice(-500);
-        writeState(s);
-        return send(res, 200, { state: s });
-      }
+    if (req.method !== 'POST') return send(res, 404, { error: 'not found' });
+    const body = await readBody(req);
+    const s = readState();
+    const at = new Date().toISOString();
 
-      if (req.method === 'POST' && url.pathname === '/api/income') {
-        const { amount } = await readBody(req);
-        const a = Math.round(Number(amount));
-        if (!Number.isFinite(a) || a === 0 || Math.abs(a) > 1e9) return send(res, 400, { error: 'bad amount' });
-        const s = readState();
-        s.income = (s.income || 0) + a;
-        s.log.push({ income: a, at: new Date().toISOString() });
-        s.log = s.log.slice(-500);
-        writeState(s);
-        return send(res, 200, { state: s });
-      }
-    }
-    send(res, 404, { error: 'not found' });
+    if (url.pathname === '/api/pay') {
+      const amount = money(body.amount);
+      if (!DEBT_IDS.has(body.debt) || !amount) return send(res, 400, { error: 'bad payment' });
+      s.payments.push({ id: crypto.randomUUID(), debt: body.debt, amount, at });
+    } else if (url.pathname === '/api/undo') {
+      const before = s.payments.length;
+      s.payments = s.payments.filter(p => p.id !== body.id);
+      if (s.payments.length === before) return send(res, 404, { error: 'payment not found' });
+    } else if (url.pathname === '/api/balance') {
+      // "the app says I still owe X" — correct drift (interest, markup, regular payments)
+      const left = Math.round(Number(body.left));
+      if (!DEBT_IDS.has(body.debt) || !Number.isFinite(left) || left < 0 || left > 1e10) return send(res, 400, { error: 'bad balance' });
+      s.balances[body.debt] = { left, at };
+    } else if (url.pathname === '/api/income') {
+      const amount = money(body.amount);
+      if (!amount) return send(res, 400, { error: 'bad amount' });
+      s.income += amount;
+      s.incomeLog.push({ amount, at });
+    } else return send(res, 404, { error: 'not found' });
+
+    writeState(s);
+    return send(res, 200, { state: s });
   } catch (e) {
     console.error(e);
     send(res, 500, { error: 'server error' });
