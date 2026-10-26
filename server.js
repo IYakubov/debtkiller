@@ -87,11 +87,16 @@ http.createServer(async (req, res) => {
         return send(res, 200, { debt: DEBT, state: readState(), now: new Date().toISOString() });
 
       if (req.method === 'POST' && url.pathname === '/api/toggle') {
-        const { id } = await readBody(req);
+        const { id, amount } = await readBody(req);
         if (!DEBT.enemies.some(e => e.id === id)) return send(res, 400, { error: 'unknown id' });
         const s = readState();
         if (s.done[id]) { delete s.done[id]; s.log.push({ id, undo: true, at: new Date().toISOString() }); }
-        else { s.done[id] = new Date().toISOString(); s.log.push({ id, at: s.done[id] }); }
+        else {
+          const a = Math.round(Number(amount));
+          const at = new Date().toISOString();
+          s.done[id] = Number.isFinite(a) && a > 0 && a < 1e9 ? { at, amount: a } : { at };
+          s.log.push({ id, at, amount: s.done[id].amount });
+        }
         s.log = s.log.slice(-500);
         writeState(s);
         return send(res, 200, { state: s });

@@ -113,6 +113,14 @@ body{display:flex;justify-content:center;min-height:100vh;background:radial-grad
 @keyframes pop{0%{opacity:0;margin-top:0}20%{opacity:1}100%{opacity:0;margin-top:-90px}}
 canvas{position:fixed;inset:0;pointer-events:none;z-index:98}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2e1640;color:#ffc2dc;padding:10px 14px;border-radius:12px;font-size:13px;z-index:100}
+.sheet{position:fixed;inset:0;background:#0009;z-index:120;display:flex;align-items:flex-end;justify-content:center}
+.sheet .in{width:100%;max-width:420px;background:var(--panel);border:2px solid var(--lime);border-bottom:0;border-radius:22px 22px 0 0;padding:20px 16px 28px;animation:up .25s}
+@keyframes up{from{transform:translateY(100%)}}
+.sheet h5{font-size:10px;color:var(--lime);margin-bottom:10px;line-height:1.5}
+.sheet p{font-size:14px;color:var(--dim);line-height:1.5;margin-bottom:14px}
+.sheet p b{color:var(--gold)}
+.sheet .add{margin-top:0}
+.sheet .cancel{display:block;width:100%;margin-top:14px;background:none;border:0;color:var(--dim);font-size:14px;font-family:inherit;cursor:pointer}
 .foot{text-align:center;color:var(--dim);font-size:11px;margin-top:4px}
 </style>
 </head>
@@ -166,6 +174,12 @@ canvas{position:fixed;inset:0;pointer-events:none;z-index:98}
   </section>
 </div>
 
+<div class="sheet hidden" id="sheet"><div class="in">
+  <h5 class="px" id="shName"></h5>
+  <p id="shInfo"></p>
+  <div class="add"><input id="shAmt" inputmode="numeric"><button class="btn" id="shOk" style="background:var(--lime);box-shadow:0 4px 0 #5d9400,0 6px 0 #000">PAID ✓</button></div>
+  <button class="cancel" id="shCancel">Not yet</button>
+</div></div>
 <script>
 const $ = s => document.querySelector(s);
 const fmt = n => { n = Math.max(0, Math.round(n)); return n >= 1e6 ? (n/1e6).toFixed(n >= 1e7 ? 1 : 2).replace(/\.?0+$/, '') + 'M' : n >= 1e3 ? Math.round(n/1e3) + 'k' : '' + n; };
@@ -177,13 +191,13 @@ function buildPad(){
   $('#pad').innerHTML = [1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k => k === '' ? '<span></span>' : `<button data-k="${k}">${k}</button>`).join('');
   drawDots();
 }
-function drawDots(){ $('#dots').innerHTML = Array.from({length:6},(_,i)=>`<i class="${i<pin.length?'on':''}"></i>`).join(''); }
+function drawDots(){ $('#dots').innerHTML = Array.from({length:4},(_,i)=>`<i class="${i<pin.length?'on':''}"></i>`).join(''); }
 $('#pad').addEventListener('click', async ev => {
   const b = ev.target.closest('button'); if (!b) return;
   const k = b.dataset.k;
-  if (k === '⌫') pin = pin.slice(0,-1); else if (pin.length < 6) pin += k;
+  if (k === '⌫') pin = pin.slice(0,-1); else if (pin.length < 4) pin += k;
   drawDots();
-  if (pin.length === 6) {
+  if (pin.length === 4) {
     const r = await fetch('/api/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({pin})});
     if (r.ok) { pin=''; load(); }
     else { const j = await r.json().catch(()=>({})); $('#lockmsg').textContent = j.error || 'Nope'; $('#dots').classList.add('err'); setTimeout(()=>$('#dots').classList.remove('err'),400); pin=''; drawDots(); }
@@ -208,7 +222,9 @@ function dayIndex(){
   return Math.round((today - Date.UTC(2026,10,5)) / 864e5);
 }
 const dlabel = iso => new Date(iso + 'T00:00:00Z').toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short', timeZone:'UTC'});
-const paidTotal = () => Object.keys(S.done).reduce((a,id) => a + (E[id] ? E[id].pay : 0), 0);
+// done[id] is either an ISO string (old format → estimate) or {at, amount}
+const paidFor = id => { const v = S.done[id]; return v && typeof v === 'object' && v.amount ? v.amount : (E[id] ? E[id].pay : 0); };
+const paidTotal = () => Object.keys(S.done).reduce((a,id) => a + (E[id] ? paidFor(id) : 0), 0);
 const isDone = id => !!S.done[id];
 const name = id => E[id].label || id;
 
@@ -241,8 +257,10 @@ function upcoming(d, n){
 }
 function taskHTML(id, extra=''){
   const e = E[id], done = isDone(id);
-  const sv = e.bal && e.bal > e.pay ? ` · <i>saves ${fmt(e.bal - e.pay)}</i>` : e.rate ? ` · ${e.rate}% loan` : '';
-  return `<div class="task ${done?'done':''} ${extra}" data-id="${id}"><div class="box">${done?'✓':''}</div><div class="tt">${name(id)}<small>pay off early${sv}</small></div><div class="am px">${fmt(e.pay)}</div></div>`;
+  const amt = done ? paidFor(id) : e.pay;
+  const sub = done ? `paid ${fmt(amt)}${e.bal && e.bal > amt ? ` · <i>saved ${fmt(e.bal - amt)}</i>` : ''}`
+    : e.rate ? `owes ${fmt(e.bal)} · ${e.rate}% loan` : `owes ${fmt(e.bal)} · early payoff ≈ ${fmt(e.pay)}`;
+  return `<div class="task ${done?'done':''} ${extra}" data-id="${id}"><div class="box">${done?'✓':''}</div><div class="tt">${name(id)}<small>${sub}</small></div><div class="am px">${done?'':'≈'}${fmt(amt)}</div></div>`;
 }
 
 function render(say){
@@ -297,20 +315,37 @@ function render(say){
   $('#incBar').style.width = Math.min(100, inc / 28e6 * 100) + '%';
 }
 
-document.addEventListener('click', async ev => {
-  const t = ev.target.closest('.task'); if (!t || !D) return;
-  const id = t.dataset.id, wasDone = isDone(id);
+let sheetId = null, sheetEl = null;
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('.task'); if (!t || !D || ev.target.closest('#sheet')) return;
+  const id = t.dataset.id;
+  if (isDone(id)) return commit(id, null, t); // tap again = undo
+  const e = E[id]; sheetId = id; sheetEl = t;
+  $('#shName').textContent = name(id);
+  $('#shInfo').innerHTML = e.rate
+    ? `Still owed: <b>${fmt(e.bal)}</b> (${e.rate}% loan).<br>Check the exact payoff amount in the TBC app.`
+    : `Still owed on schedule: <b>${fmt(e.bal)}</b>.<br>My early-payoff guess: <b>≈ ${fmt(e.pay)}</b>.<br>Type what the Tezcoin app actually charged you.`;
+  $('#shAmt').value = e.pay; $('#sheet').classList.remove('hidden'); setTimeout(() => $('#shAmt').select(), 50);
+});
+$('#shCancel').onclick = () => $('#sheet').classList.add('hidden');
+$('#sheet').onclick = ev => { if (ev.target.id === 'sheet') $('#sheet').classList.add('hidden'); };
+$('#shOk').onclick = () => {
+  const a = parseInt(($('#shAmt').value || '').replace(/\D/g,'')) || 0; if (!a) return $('#shAmt').focus();
+  $('#sheet').classList.add('hidden'); commit(sheetId, a, sheetEl);
+};
+async function commit(id, amount, t){
+  const wasDone = isDone(id);
   // optimistic update
-  if (wasDone) delete S.done[id]; else S.done[id] = new Date().toISOString();
-  if (!wasDone) celebrate(id, t);
+  if (wasDone) delete S.done[id]; else S.done[id] = {at: new Date().toISOString(), amount};
+  if (!wasDone) celebrate(id, t, amount);
   render(wasDone ? 'Undo, no problem 👍' : (E[id].type === 'boss' ? (id === 'TBC-NEW' ? null : 'THE SNAIL IS DEAD 🐌💀 Huge!') : pick(CHEERS)));
   try {
-    const r = await fetch('/api/toggle', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id})});
+    const r = await fetch('/api/toggle', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id, amount})});
     if (r.status === 401) return load();
     if (!r.ok) throw 0;
     S = (await r.json()).state; render($('#say').textContent);
   } catch { toast('Could not save — check your internet'); load(); }
-});
+}
 $('#aheadBtn').onclick = () => { showAhead = !showAhead; render($('#say').textContent); };
 $('#incBtn').onclick = async () => {
   const a = parseInt(($('#incAmt').value || '').replace(/\D/g,'')) || 0; if (!a) return $('#incAmt').focus();
@@ -320,9 +355,9 @@ $('#incBtn').onclick = async () => {
   render(`+${fmt(a)} 💰 Hustle mode ON`);
 };
 
-function celebrate(id, el){
+function celebrate(id, el, amount){
   const r = el.getBoundingClientRect(), e = E[id];
-  const pp = document.createElement('div'); pp.className = 'pop'; pp.textContent = '-' + fmt(e.pay);
+  const pp = document.createElement('div'); pp.className = 'pop'; pp.textContent = '-' + fmt(amount || e.pay);
   pp.style.left = (r.left + r.width/2) + 'px'; pp.style.top = r.top + 'px'; document.body.appendChild(pp); setTimeout(() => pp.remove(), 1000);
   const b = $('#buddy'); b.classList.remove('cheer'); void b.offsetWidth; b.classList.add('cheer');
   const big = e.type === 'boss';
