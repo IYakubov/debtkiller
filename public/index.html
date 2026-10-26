@@ -260,7 +260,8 @@ function taskHTML(id, extra=''){
   const amt = done ? paidFor(id) : e.pay;
   const sub = done ? `paid ${fmt(amt)}${e.bal && e.bal > amt ? ` · <i>saved ${fmt(e.bal - amt)}</i>` : ''}`
     : e.rate ? `owes ${fmt(e.bal)} · ${e.rate}% loan` : `owes ${fmt(e.bal)} · early payoff ≈ ${fmt(e.pay)}`;
-  return `<div class="task ${done?'done':''} ${extra}" data-id="${id}"><div class="box">${done?'✓':''}</div><div class="tt">${name(id)}<small>${sub}</small></div><div class="am px">${done?'':'≈'}${fmt(amt)}</div></div>`;
+  const taken = e.start ? `<small>📅 taken ${dlabel(e.start).replace(/^\w+ /,'')} ${e.start.slice(0,4)}</small>` : '';
+  return `<div class="task ${done?'done':''} ${extra}" data-id="${id}"><div class="box">${done?'✓':''}</div><div class="tt">${name(id)}${taken}<small>${sub}</small></div><div class="am px">${done?'':'≈'}${fmt(amt)}</div></div>`;
 }
 
 function render(say){
@@ -324,7 +325,7 @@ document.addEventListener('click', ev => {
   $('#shName').textContent = name(id);
   $('#shInfo').innerHTML = e.rate
     ? `Still owed: <b>${fmt(e.bal)}</b> (${e.rate}% loan).<br>Check the exact payoff amount in the TBC app.`
-    : `Still owed on schedule: <b>${fmt(e.bal)}</b>.<br>My early-payoff guess: <b>≈ ${fmt(e.pay)}</b>.<br>Type what the Tezcoin app actually charged you.`;
+    : `${e.start ? `Taken on <b>${dlabel(e.start)} ${e.start.slice(0,4)}</b>.<br>` : ''}Still owed on schedule: <b>${fmt(e.bal)}</b>.<br>My early-payoff guess: <b>≈ ${fmt(e.pay)}</b>.<br>Type what the Tezcoin app actually charged you.`;
   $('#shAmt').value = e.pay; $('#sheet').classList.remove('hidden'); setTimeout(() => $('#shAmt').select(), 50);
 });
 $('#shCancel').onclick = () => $('#sheet').classList.add('hidden');
